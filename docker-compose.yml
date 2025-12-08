@@ -1,0 +1,59 @@
+# apps/meogle-was/docker-compose.yml (기본)
+
+x-common: &common
+  restart: unless-stopped
+  networks:
+    - meogle-network
+  labels:
+    - "autoheal=true"
+
+services:
+  autoheal:
+    image: willfarrell/autoheal:latest
+    container_name: meogle.autoheal
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=autoheal=true
+      - AUTOHEAL_INTERVAL=30
+      - AUTOHEAL_START_PERIOD=180
+      - AUTOHEAL_DEFAULT_STOP_TIMEOUT=20
+    networks:
+      - meogle-network
+
+  was:
+    <<: *common
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: ${DOCKER_USERNAME}/meogle-was:${IMAGE_TAG:-latest}
+    container_name: meogle.was
+
+  postgres:
+    <<: *common
+    image: postgres:18
+    container_name: meogle.postgres
+    environment:
+      POSTGRES_DB: ${MEOGLE_PG_DATABASE}
+      POSTGRES_USER: ${MEOGLE_PG_USERNAME}
+      POSTGRES_PASSWORD: ${MEOGLE_PG_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${OSORI_ADMIN_DB_USERNAME:-postgres}" ]
+      start_period: 60s
+      start_interval: 10s
+      interval: 120s
+      timeout: 15s
+      retries: 3
+
+volumes:
+  postgres_data:
+
+networks:
+  meogle-network:
+    driver: bridge

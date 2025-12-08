@@ -1,0 +1,19 @@
+# apps/meogle-was/docker-compose.prod.yml (프로덕션 override)
+services:
+  was:
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: prod
+      DB_HOST: meogle.postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${MEOGLE_PG_DATABASE}
+      DB_USERNAME: ${MEOGLE_PG_USERNAME}
+      DB_PASSWORD: ${MEOGLE_PG_PASSWORD}
+      JWT_SECRET: ${MEOGLE_JWT_SECRET}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
