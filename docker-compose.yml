@@ -22,6 +22,13 @@ services:
     networks:
       - meogle-network
 
+  web:
+    <<: *common
+    container_name: meogle.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+
   was:
     <<: *common
     depends_on:
@@ -44,7 +51,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${OSORI_ADMIN_DB_USERNAME:-postgres}" ]
+      test: [ "CMD", "pg_isready", "-U", "${MEOGLE_PG_USERNAME:-postgres}" ]
       start_period: 60s
       start_interval: 10s
       interval: 120s

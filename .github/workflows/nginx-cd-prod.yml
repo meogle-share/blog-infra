@@ -1,0 +1,40 @@
+name: nginx-cd-prod
+on:
+  workflow_run:
+    workflows: [ "nginx-ci-prod" ]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, production]
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_HASH_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_HASH_PAT }}
+
+      - name: Checkout Compose Repo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: blog-infra
+
+      - name: Deploy UI Service
+        working-directory: blog-infra
+        run: |
+          docker compose -p meogle -f docker-compose.yml -f docker-compose.prod.yml pull web
+          docker compose -p meogle -f docker-compose.yml -f docker-compose.prod.yml up -d web autoheal
+
+      - name: Clean up dangling images
+        if: success()
+        run: |
+          docker image prune -f
+
+      - name: Cleanup Docker Context
+        if: always()
+        run: |
+          docker context use default || true
+          docker context rm -f ${{ env.DOCKER_CONTEXT_NAME }} || true

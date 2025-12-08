@@ -1,5 +1,21 @@
 # apps/meogle-was/docker-compose.prod.yml (프로덕션 override)
 services:
+  web:
+    image: willom2c/meogle-nginx:latest
+    environment:
+      ACCESS_LOG_FORMAT: ${ACCESS_LOG_FORMAT:-vhost}
+      ERROR_LOG_LEVEL: ${ERROR_LOG_LEVEL:-debug}
+    volumes:
+      - ${CERT_HOST_DIR:-/home/centos/server/cert}/${CERT_HOST_FILE_NAME:-fullchain.pem}:/etc/nginx/ssl/cert.pem:ro
+      - ${CERT_HOST_DIR:-/home/centos/server/cert}/${CERT_HOST_KEY_FILE_NAME:-privkey.pem}:/etc/nginx/ssl/key.pem:ro
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/health-check" ]
+      start_period: 30s
+      start_interval: 5s
+      interval: 120s
+      timeout: 5s
+      retries: 3
+
   was:
     ports:
       - "3001:3001"
