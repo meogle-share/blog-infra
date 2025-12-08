@@ -27,7 +27,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: ${DOCKER_USERNAME}/meogle-was:${IMAGE_TAG:-latest}
+    image: willom2c/meogle-was:${IMAGE_TAG:-latest}
     container_name: meogle.was
 
   postgres:
