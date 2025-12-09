@@ -1,0 +1,7 @@
+.idea
+.env*
+
+# temp directory
+.temp
+.tmp
+
