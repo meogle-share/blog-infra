@@ -29,6 +29,15 @@ services:
       - "80:80"
       - "443:443"
 
+  certbot:
+    image: certbot/certbot:latest
+    container_name: meogle.certbot
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot-webroot:/var/www/certbot
+    networks:
+      - meogle-network
+
   was:
     <<: *common
     depends_on:
@@ -36,6 +45,7 @@ services:
         condition: service_healthy
     image: willom2c/meogle-was:${IMAGE_TAG:-latest}
     container_name: meogle.was
+
 
   postgres:
     <<: *common
@@ -60,6 +70,8 @@ services:
 
 volumes:
   postgres_data:
+  letsencrypt:
+  certbot-webroot:
 
 networks:
   meogle-network:

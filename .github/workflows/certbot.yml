@@ -1,0 +1,25 @@
+name: certbot-issue-certificate
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'init (초기 발급) / renew (갱신)'
+        required: true
+        default: 'renew'
+        type: choice
+        options:
+          - init
+          - renew
+  schedule:
+    # 매월 1일, 15일 새벽 3시 (KST)
+    - cron: '0 18 1,15 * *'
+
+jobs:
+  certbot:
+    runs-on: [self-hosted, production]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run certbot
+        run: ./scripts/certbot.sh ${{ github.event.inputs.action || 'renew' }}

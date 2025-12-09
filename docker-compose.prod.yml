@@ -6,8 +6,8 @@ services:
       ACCESS_LOG_FORMAT: ${ACCESS_LOG_FORMAT:-vhost}
       ERROR_LOG_LEVEL: ${ERROR_LOG_LEVEL:-debug}
     volumes:
-      - ${CERT_HOST_DIR:-/home/centos/server/cert}/${CERT_HOST_FILE_NAME:-fullchain.pem}:/etc/nginx/ssl/cert.pem:ro
-      - ${CERT_HOST_DIR:-/home/centos/server/cert}/${CERT_HOST_KEY_FILE_NAME:-privkey.pem}:/etc/nginx/ssl/key.pem:ro
+      - letsencrypt:/etc/letsencrypt:ro
+      - certbot-webroot:/var/www/certbot:ro
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/health-check" ]
       start_period: 30s
