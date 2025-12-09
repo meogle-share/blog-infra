@@ -26,6 +26,14 @@ create_dummy_cert() {
             -subj '/CN=$DOMAIN'"
 }
 
+remove_dummy_cert() {
+    echo "==> Removing dummy certificate..."
+    $COMPOSE_CMD run --rm --entrypoint sh certbot -c "\
+        rm -rf /etc/letsencrypt/live/$DOMAIN && \
+        rm -rf /etc/letsencrypt/archive/$DOMAIN && \
+        rm -f /etc/letsencrypt/renewal/$DOMAIN.conf"
+}
+
 init() {
     local staging_flag=""
     if [ "${1:-}" = "staging" ]; then
@@ -33,15 +41,18 @@ init() {
         echo "==> [STAGING] 테스트 모드로 실행합니다."
     fi
 
-    # 더미 인증서 생성 (nginx 시작용)
+    # 1. 더미 인증서 생성 (nginx 시작용)
     create_dummy_cert
 
-    # nginx 재시작 (기존 compose 환경 유지)
+    # 2. nginx 시작 (더미 인증서로 SSL 작동)
     echo "==> Starting nginx with dummy certificate..."
     $COMPOSE_CMD up -d --force-recreate web
     sleep 5
 
-    # webroot 방식으로 실제 인증서 발급 (nginx 중지 불필요)
+    # 3. 더미 인증서 삭제 (certbot이 깨끗하게 발급할 수 있도록)
+    remove_dummy_cert
+
+    # 4. 실제 인증서 발급
     echo "==> Requesting certificate for $DOMAIN..."
     $COMPOSE_CMD run --rm certbot certonly \
         --webroot \
@@ -49,11 +60,10 @@ init() {
         --agree-tos \
         --no-eff-email \
         --email "$EMAIL" \
-        --force-renewal \
         $staging_flag \
         -d "$DOMAIN"
 
-    # nginx reload로 실제 인증서 적용
+    # 5. nginx reload로 실제 인증서 적용
     echo "==> Reloading nginx with real certificate..."
     docker exec meogle.nginx nginx -s reload
 
@@ -62,9 +72,7 @@ init() {
 
 renew() {
     echo "==> Renewing certificates..."
-    $COMPOSE_CMD run --rm certbot renew \
-        --webroot \
-        -w /var/www/certbot
+    $COMPOSE_CMD run --rm certbot renew
 
     echo "==> Reloading nginx..."
     docker exec meogle.nginx nginx -s reload
