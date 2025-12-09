@@ -7,8 +7,9 @@ upstream api_backend {
 }
 
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
     server_name www.meogle.co.kr;
 
     ssl_certificate /etc/letsencrypt/live/www.meogle.co.kr/fullchain.pem;
