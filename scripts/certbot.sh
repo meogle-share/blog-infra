@@ -33,17 +33,13 @@ init() {
         echo "==> [STAGING] 테스트 모드로 실행합니다."
     fi
 
-    # 기존 nginx 컨테이너 정리
-    echo "==> Removing existing nginx container..."
-    docker rm -f meogle.nginx 2>/dev/null || true
-
     # 더미 인증서 생성 (nginx 시작용)
     create_dummy_cert
 
-    # nginx 시작
+    # nginx 재시작 (기존 compose 환경 유지)
     echo "==> Starting nginx with dummy certificate..."
-    docker compose -f $COMPOSE_FILE up -d web
-    sleep 3
+    docker compose -f $COMPOSE_FILE up -d --force-recreate web
+    sleep 5
 
     # webroot 방식으로 실제 인증서 발급 (nginx 중지 불필요)
     echo "==> Requesting certificate for $DOMAIN..."
