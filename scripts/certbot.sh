@@ -6,15 +6,22 @@ EMAIL="${CERTBOT_EMAIL:-jmsavemail@gmail.com}"
 COMPOSE_FILE="docker-compose.yml -f docker-compose.prod.yml"
 
 usage() {
-    echo "Usage: $0 {init|renew}"
+    echo "Usage: $0 {init|init-staging|renew}"
     echo ""
     echo "Commands:"
-    echo "  init   - 초기 인증서 발급 (nginx 중지 필요)"
-    echo "  renew  - 인증서 갱신 (무중단)"
+    echo "  init         - 초기 인증서 발급 (nginx 중지 필요)"
+    echo "  init-staging - 테스트용 인증서 발급 (rate limit 없음)"
+    echo "  renew        - 인증서 갱신 (무중단)"
     exit 1
 }
 
 init() {
+    local staging_flag=""
+    if [ "${1:-}" = "staging" ]; then
+        staging_flag="--staging"
+        echo "==> [STAGING] 테스트 모드로 실행합니다."
+    fi
+
     echo "==> Stopping nginx for initial certificate..."
     docker compose -f $COMPOSE_FILE stop web
 
@@ -24,6 +31,7 @@ init() {
         --agree-tos \
         --no-eff-email \
         --email "$EMAIL" \
+        $staging_flag \
         -d "$DOMAIN"
 
     echo "==> Starting nginx with SSL..."
@@ -47,6 +55,9 @@ renew() {
 case "${1:-}" in
     init)
         init
+        ;;
+    init-staging)
+        init staging
         ;;
     renew)
         renew
