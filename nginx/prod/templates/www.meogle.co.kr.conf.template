@@ -20,8 +20,9 @@ server {
     http2 on;
     server_name www.meogle.co.kr;
 
-    ssl_certificate /etc/letsencrypt/live/www.meogle.co.kr/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/www.meogle.co.kr/privkey.pem;
+    ssl_certificate /etc/cloudflare/meogle.co.kr.pem;
+    ssl_certificate_key /etc/cloudflare/meogle.co.kr.key;
+
 
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 1d;
