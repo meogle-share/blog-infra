@@ -25,6 +25,9 @@ services:
   web:
     <<: *common
     container_name: meogle.nginx
+    depends_on:
+      was:
+        condition: service_healthy
     ports:
       - "80:80"
       - "443:443"
