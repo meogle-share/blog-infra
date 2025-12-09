@@ -3,7 +3,7 @@ set -e
 
 DOMAIN="www.meogle.co.kr"
 EMAIL="${CERTBOT_EMAIL:-jmsavemail@gmail.com}"
-COMPOSE_FILE="docker-compose.yml -f docker-compose.prod.yml"
+COMPOSE_CMD="docker compose -p meogle -f docker-compose.yml -f docker-compose.prod.yml"
 CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
 
 usage() {
@@ -18,7 +18,7 @@ usage() {
 
 create_dummy_cert() {
     echo "==> Creating dummy certificate for nginx startup..."
-    docker compose -f $COMPOSE_FILE run --rm --entrypoint sh certbot -c "\
+    $COMPOSE_CMD run --rm --entrypoint sh certbot -c "\
         mkdir -p $CERT_PATH && \
         openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
             -keyout $CERT_PATH/privkey.pem \
@@ -38,12 +38,12 @@ init() {
 
     # nginx 재시작 (기존 compose 환경 유지)
     echo "==> Starting nginx with dummy certificate..."
-    docker compose -f $COMPOSE_FILE up -d --force-recreate web
+    $COMPOSE_CMD up -d --force-recreate web
     sleep 5
 
     # webroot 방식으로 실제 인증서 발급 (nginx 중지 불필요)
     echo "==> Requesting certificate for $DOMAIN..."
-    docker compose -f $COMPOSE_FILE run --rm certbot certonly \
+    $COMPOSE_CMD run --rm certbot certonly \
         --webroot \
         -w /var/www/certbot \
         --agree-tos \
@@ -62,7 +62,7 @@ init() {
 
 renew() {
     echo "==> Renewing certificates..."
-    docker compose -f $COMPOSE_FILE run --rm certbot renew \
+    $COMPOSE_CMD run --rm certbot renew \
         --webroot \
         -w /var/www/certbot
 
