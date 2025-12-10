@@ -36,6 +36,9 @@ services:
         condition: service_healthy
     container_name: meogle.was
 
+  ui:
+    <<: *common
+    container_name: meogle.ui
 
   postgres:
     <<: *common
