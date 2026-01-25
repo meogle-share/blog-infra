@@ -5,3 +5,7 @@
 .temp
 .tmp
 
+# binary files
+*.tgz
+*.tar.gz
+
