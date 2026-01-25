@@ -1,0 +1,5 @@
+apiVersion: v2
+name: meogle-was
+version: 1.0.0
+description: Meogle WAS (Node.js API Server)
+appVersion: "1.0.0"

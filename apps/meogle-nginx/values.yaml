@@ -1,0 +1,24 @@
+# Meogle Ingress Configuration
+
+namespace: meogle
+
+domain: www.meogle.co.kr
+
+# Backend service references
+was:
+  serviceName: meogle-was
+  port: 3001
+
+ui:
+  serviceName: meogle-ui
+  port: 3000
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1m"
+  tls:
+    enabled: true
+    secretName: meogle-tls-secret

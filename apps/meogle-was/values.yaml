@@ -1,0 +1,30 @@
+# Meogle WAS (Backend API) Configuration
+
+namespace: meogle
+
+image:
+  repository: willom2c/meogle-was
+  tag: "latest"
+
+replicas: 1
+port: 3001
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Database connection settings
+db:
+  host: postgres  # PostgreSQL service name from infra/postgres chart
+  port: "5432"
+  name: meogle
+  username: meogle
+  password: ""  # Required: --set db.password=xxx
+
+# JWT Secret
+jwt:
+  secret: ""  # Required: --set jwt.secret=xxx

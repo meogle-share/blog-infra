@@ -1,0 +1,25 @@
+# ArgoCD configuration
+# Reference: https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+
+argo-cd:
+  # Server configuration
+  server:
+    ingress:
+      enabled: false
+    service:
+      type: ClusterIP
+
+  # Disable unused components for minimal setup
+  dex:
+    enabled: false
+
+  notifications:
+    enabled: false
+
+  applicationSet:
+    enabled: true
+
+  # Repository credentials (configure as needed)
+  configs:
+    repositories: {}
+    credentialTemplates: {}

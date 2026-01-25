@@ -1,0 +1,5 @@
+apiVersion: v2
+name: postgres
+version: 1.0.0
+description: PostgreSQL database for Meogle application
+appVersion: "18"

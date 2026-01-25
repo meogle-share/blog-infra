@@ -1,0 +1,5 @@
+apiVersion: v2
+name: meogle-ui
+version: 1.0.0
+description: Meogle UI (React Frontend)
+appVersion: "1.0.0"

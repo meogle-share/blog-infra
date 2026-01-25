@@ -1,0 +1,23 @@
+# PostgreSQL Configuration
+
+namespace: meogle
+
+image: postgres:18
+replicas: 1
+port: 5432
+storage: 10Gi
+storageClass: ""  # Use default storage class
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Database credentials (set via --set or sealed secrets)
+database:
+  name: meogle
+  username: meogle
+  password: ""  # Required: --set database.password=xxx

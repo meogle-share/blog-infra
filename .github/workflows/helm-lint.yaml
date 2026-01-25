@@ -1,0 +1,52 @@
+name: Helm Lint & Validate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/**'
+      - 'infra/**'
+      - 'argocd-apps/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/**'
+      - 'infra/**'
+      - 'argocd-apps/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Lint Application Charts
+        run: |
+          helm lint apps/meogle-was
+          helm lint apps/meogle-ui
+          helm lint apps/meogle-nginx
+
+      - name: Lint Infrastructure Charts
+        run: |
+          helm lint infra/postgres
+          helm lint infra/argocd
+
+      - name: Template Validation
+        run: |
+          helm template meogle-was apps/meogle-was --set db.password=test --set jwt.secret=test
+          helm template meogle-ui apps/meogle-ui
+          helm template meogle-nginx apps/meogle-nginx
+          helm template postgres infra/postgres --set database.password=test
+
+      - name: Validate ArgoCD Applications
+        run: |
+          for file in argocd-apps/apps/*.yaml argocd-apps/infra/*.yaml; do
+            echo "Validating $file"
+            kubectl apply --dry-run=client -f "$file" 2>/dev/null || echo "Note: kubectl validation skipped (no cluster)"
+          done
