@@ -21,7 +21,7 @@ argo-cd:
 
     notifiers:
       service.slack: |
-        webhook: $slack-webhook
+        token: $slack-token
 
     templates:
       template.app-deployed: |
@@ -140,7 +140,7 @@ argo-cd:
 
     subscriptions:
       - recipients:
-          - slack:webhook
+          - slack:인프라
         triggers:
           - on-deployed
           - on-health-degraded
