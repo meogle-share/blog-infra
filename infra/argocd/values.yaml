@@ -138,6 +138,13 @@ argo-cd:
         - when: app.status.health.status == 'Degraded'
           send: [app-failed]
 
+    subscriptions:
+      - recipients:
+          - slack:webhook
+        triggers:
+          - on-deployed
+          - on-health-degraded
+
   applicationSet:
     enabled: true
 
