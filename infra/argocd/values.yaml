@@ -8,6 +8,11 @@ argo-cd:
       enabled: false
     service:
       type: ClusterIP
+      externalIPs:
+        - 10.8.0.1
+      servicePortHttp: 33000
+    extraArgs:
+      - --insecure
 
   # Disable unused components for minimal setup
   dex:
