@@ -1,7 +1,5 @@
 name: nginx-ci-prod
 on:
-  repository_dispatch:
-    types: [fe-build-prod]
   workflow_dispatch:
 
 env:

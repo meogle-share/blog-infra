@@ -1,9 +1,5 @@
 name: nginx-cd-prod
 on:
-  workflow_run:
-    workflows: [ "nginx-ci-prod" ]
-    types:
-      - completed
   workflow_dispatch:
 
 jobs:
