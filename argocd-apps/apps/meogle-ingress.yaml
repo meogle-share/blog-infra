@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: meogle-nginx
+  name: meogle-ingress
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/meogle-share/blog-infra.git
     targetRevision: main
-    path: apps/meogle-nginx
+    path: apps/meogle-ingress
   destination:
     server: https://kubernetes.default.svc
     namespace: meogle

@@ -24,8 +24,8 @@ jobs:
           if git diff --name-only HEAD~1 HEAD | grep -q "^apps/meogle-ui/"; then
             CHANGED_APPS="$CHANGED_APPS meogle-ui"
           fi
-          if git diff --name-only HEAD~1 HEAD | grep -q "^apps/meogle-nginx/"; then
-            CHANGED_APPS="$CHANGED_APPS meogle-nginx"
+          if git diff --name-only HEAD~1 HEAD | grep -q "^apps/meogle-ingress/"; then
+            CHANGED_APPS="$CHANGED_APPS meogle-ingress"
           fi
           if git diff --name-only HEAD~1 HEAD | grep -q "^infra/postgres/"; then
             CHANGED_APPS="$CHANGED_APPS postgres"
@@ -66,4 +66,4 @@ jobs:
   #       run: |
   #         argocd app sync meogle-was --grpc-web
   #         argocd app sync meogle-ui --grpc-web
-  #         argocd app sync meogle-nginx --grpc-web
+  #         argocd app sync meogle-ingress --grpc-web

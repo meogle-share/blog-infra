@@ -1,4 +1,4 @@
-# Meogle Ingress Configuration
+# Meogle Ingress Configuration (Traefik)
 
 namespace: meogle
 
@@ -15,10 +15,6 @@ ui:
 
 ingress:
   enabled: true
-  className: nginx
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "1m"
   tls:
     enabled: true
     secretName: meogle-tls-secret

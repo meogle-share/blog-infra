@@ -1,0 +1,36 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "meogle-ingress.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "meogle-ingress.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- if .Values.ingress.tls.enabled }}
+    - websecure
+    {{- else }}
+    - web
+    {{- end }}
+  routes:
+    # API routes: /api/* -> WAS (strip /api prefix)
+    - match: Host(`{{ .Values.domain }}`) && PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: {{ .Values.was.serviceName }}
+          port: {{ .Values.was.port }}
+      middlewares:
+        - name: {{ include "meogle-ingress.fullname" . }}-strip-api
+          namespace: {{ .Values.namespace }}
+    # Default routes: /* -> UI
+    - match: Host(`{{ .Values.domain }}`)
+      kind: Rule
+      services:
+        - name: {{ .Values.ui.serviceName }}
+          port: {{ .Values.ui.port }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+{{- end }}

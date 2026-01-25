@@ -1,14 +1,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "meogle-nginx.name" -}}
+{{- define "meogle-ingress.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "meogle-nginx.fullname" -}}
+{{- define "meogle-ingress.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -24,16 +24,16 @@ Create a default fully qualified app name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "meogle-nginx.chart" -}}
+{{- define "meogle-ingress.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "meogle-nginx.labels" -}}
-helm.sh/chart: {{ include "meogle-nginx.chart" . }}
-{{ include "meogle-nginx.selectorLabels" . }}
+{{- define "meogle-ingress.labels" -}}
+helm.sh/chart: {{ include "meogle-ingress.chart" . }}
+{{ include "meogle-ingress.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -43,7 +43,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "meogle-nginx.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "meogle-nginx.name" . }}
+{{- define "meogle-ingress.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "meogle-ingress.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

@@ -30,7 +30,7 @@ jobs:
         run: |
           helm lint apps/meogle-was
           helm lint apps/meogle-ui
-          helm lint apps/meogle-nginx
+          helm lint apps/meogle-ingress
 
       - name: Lint Infrastructure Charts
         run: |
@@ -41,7 +41,7 @@ jobs:
         run: |
           helm template meogle-was apps/meogle-was --set db.password=test --set jwt.secret=test
           helm template meogle-ui apps/meogle-ui
-          helm template meogle-nginx apps/meogle-nginx
+          helm template meogle-ingress apps/meogle-ingress
           helm template postgres infra/postgres --set database.password=test
 
       - name: Validate ArgoCD Applications
