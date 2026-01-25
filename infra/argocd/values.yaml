@@ -1,8 +1,4 @@
-# ArgoCD configuration
-# Reference: https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
-
 argo-cd:
-  # Server configuration
   server:
     ingress:
       enabled: false
@@ -14,139 +10,137 @@ argo-cd:
     extraArgs:
       - --insecure
 
-  # Disable unused components for minimal setup
   dex:
     enabled: false
 
-notifications:
-  enabled: true
+  notifications:
+    enabled: true
 
-  secret:
-    create: false
+    secret:
+      create: false
 
-  notifiers:
-    service.slack: |
-      webhook: $slack-webhook
+    notifiers:
+      service.slack: |
+        webhook: $slack-webhook
 
-  templates:
-    template.app-deployed: |
-      message: |
-        ✅ *{{.app.metadata.name}}* 배포 완료
-      slack:
-        attachments: |
-          [{
-            "color": "#18be52",
-            "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "✅ 배포 성공"
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*애플리케이션:*\n{{.app.metadata.name}}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*환경:*\n{{.app.spec.destination.namespace}}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*커밋:*\n`{{.app.status.sync.revision | truncate 7 ""}}`"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*상태:*\n{{.app.status.health.status}}"
+    templates:
+      template.app-deployed: |
+        message: |
+          ✅ *{{.app.metadata.name}}* 배포 완료
+        slack:
+          attachments: |
+            [{
+              "color": "#18be52",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ 배포 성공"
                   }
-                ]
-              },
-              {
-                "type": "actions",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "ArgoCD에서 보기"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*애플리케이션:*\n{{.app.metadata.name}}"
                     },
-                    "url": "http://10.8.0.1:33000/applications/{{.app.metadata.name}}"
-                  }
-                ]
-              }
-            ]
-          }]
-
-    template.app-failed: |
-      message: |
-        ❌ *{{.app.metadata.name}}* 배포 실패
-      slack:
-        attachments: |
-          [{
-            "color": "#E01E5A",
-            "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "❌ 배포 실패"
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*애플리케이션:*\n{{.app.metadata.name}}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*환경:*\n{{.app.spec.destination.namespace}}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*상태:*\n{{.app.status.health.status}}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Sync 상태:*\n{{.app.status.sync.status}}"
-                  }
-                ]
-              },
-              {
-                "type": "actions",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "ArgoCD에서 확인"
+                    {
+                      "type": "mrkdwn",
+                      "text": "*환경:*\n{{.app.spec.destination.namespace}}"
                     },
-                    "url": "http://10.8.0.1:33000/applications/{{.app.metadata.name}}",
-                    "style": "danger"
+                    {
+                      "type": "mrkdwn",
+                      "text": "*커밋:*\n`{{.app.status.sync.revision | truncate 7 ""}}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*상태:*\n{{.app.status.health.status}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "ArgoCD에서 보기"
+                      },
+                      "url": "http://10.8.0.1:33000/applications/{{.app.metadata.name}}"
+                    }
+                  ]
+                }
+              ]
+            }]
+
+      template.app-failed: |
+        message: |
+          ❌ *{{.app.metadata.name}}* 배포 실패
+        slack:
+          attachments: |
+            [{
+              "color": "#E01E5A",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "❌ 배포 실패"
                   }
-                ]
-              }
-            ]
-          }]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*애플리케이션:*\n{{.app.metadata.name}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*환경:*\n{{.app.spec.destination.namespace}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*상태:*\n{{.app.status.health.status}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Sync 상태:*\n{{.app.status.sync.status}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "ArgoCD에서 확인"
+                      },
+                      "url": "http://10.8.0.1:33000/applications/{{.app.metadata.name}}",
+                      "style": "danger"
+                    }
+                  ]
+                }
+              ]
+            }]
 
-  triggers:
-    trigger.on-deployed: |
-      - when: app.status.sync.status == 'Synced' and app.status.health.status == 'Healthy'
-        send: [app-deployed]
+    triggers:
+      trigger.on-deployed: |
+        - when: app.status.sync.status == 'Synced' and app.status.health.status == 'Healthy'
+          send: [app-deployed]
 
-    trigger.on-health-degraded: |
-      - when: app.status.health.status == 'Degraded'
-        send: [app-failed]
+      trigger.on-health-degraded: |
+        - when: app.status.health.status == 'Degraded'
+          send: [app-failed]
 
   applicationSet:
     enabled: true
 
-  # Repository credentials (configure as needed)
   configs:
     repositories: {}
     credentialTemplates: {}
