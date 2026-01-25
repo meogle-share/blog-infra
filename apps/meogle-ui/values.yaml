@@ -1,13 +1,11 @@
 # Meogle UI (Frontend) Configuration
 
 namespace: meogle
-
 image:
   repository: willom2c/meogle-ui
-  tag: "latest"
+  tag: "e3c0f11b37b4241448b6e2007f1231c289e91d6f"
 replicas: 1
 port: 3000
-
 resources:
   requests:
     memory: "128Mi"
