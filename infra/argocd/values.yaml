@@ -52,7 +52,7 @@ argo-cd:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*커밋:*\n`{{.app.status.sync.revision | truncate 7 ""}}`"
+                      "text": "*커밋:*\n`{{.app.status.sync.revision | trunc 7}}`"
                     },
                     {
                       "type": "mrkdwn",
