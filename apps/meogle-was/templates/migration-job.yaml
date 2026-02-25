@@ -43,6 +43,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "meogle-was.fullname" . }}-secret
                   key: DB_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "meogle-was.fullname" . }}-secret
+                  key: JWT_SECRET
           resources:
             requests:
               memory: "256Mi"
