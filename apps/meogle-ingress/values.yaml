@@ -17,4 +17,3 @@ ingress:
   enabled: true
   tls:
     enabled: false
-    secretName: meogle-tls-secret
