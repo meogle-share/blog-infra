@@ -16,5 +16,5 @@ ui:
 ingress:
   enabled: true
   tls:
-    enabled: true
+    enabled: false
     secretName: meogle-tls-secret
