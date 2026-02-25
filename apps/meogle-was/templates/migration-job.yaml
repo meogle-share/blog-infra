@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "meogle-was.fullname" . }}-migration-{{ .Release.Revision }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "meogle-was.labels" . | nindent 4 }}
+    app.kubernetes.io/component: migration
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        {{- include "meogle-was.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: migration
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          command: ["npm", "run", "migration:run:prod"]
+          envFrom:
+            - configMapRef:
+                name: {{ include "meogle-was.fullname" . }}-config
+          env:
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "meogle-was.fullname" . }}-secret
+                  key: DB_DATABASE
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "meogle-was.fullname" . }}-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "meogle-was.fullname" . }}-secret
+                  key: DB_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
