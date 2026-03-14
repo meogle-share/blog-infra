@@ -3,7 +3,7 @@
 namespace: meogle
 image:
   repository: willom2c/meogle-ui
-  tag: "d583537e12779fa9a8c2ee40a07e2d8b140bff8c"
+  tag: "b8c9a42fddb6425c2e136180307d591681b67187"
 replicas: 1
 port: 3000
 resources:
