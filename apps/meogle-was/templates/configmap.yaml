@@ -9,3 +9,4 @@ data:
   NODE_ENV: "prod"
   DB_HOST: {{ .Values.db.host | quote }}
   DB_PORT: {{ .Values.db.port | quote }}
+  GITHUB_FRONTEND_REDIRECT_URL: {{ .Values.github.frontendRedirectUrl | quote }}

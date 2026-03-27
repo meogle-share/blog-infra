@@ -46,6 +46,21 @@ spec:
                 secretKeyRef:
                   name: {{ include "meogle-was.fullname" . }}-secret
                   key: JWT_SECRET
+            - name: GITHUB_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "meogle-was.fullname" . }}-secret
+                  key: GITHUB_CLIENT_ID
+            - name: GITHUB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "meogle-was.fullname" . }}-secret
+                  key: GITHUB_CLIENT_SECRET
+            - name: GITHUB_CALLBACK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "meogle-was.fullname" . }}-secret
+                  key: GITHUB_CALLBACK_URL
           resources:
             requests:
               memory: {{ .Values.resources.requests.memory | quote }}

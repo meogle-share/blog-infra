@@ -23,3 +23,6 @@ db:
 # JWT Secret
 jwt:
   secret: "" # Required: --set jwt.secret=xxx
+# GitHub OAuth
+github:
+  frontendRedirectUrl: "https://www.meogle.co.kr"
