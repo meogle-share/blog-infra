@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/meogle-share/blog-infra.git
+    repoURL: https://github.com/meogle-share/blog-infra
     targetRevision: main
     path: apps/meogle-ui
   destination:
