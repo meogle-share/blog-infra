@@ -3,6 +3,12 @@ kind: Application
 metadata:
   name: meogle-ui
   namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.meogle: "인프라"
+    notifications.argoproj.io/subscribe.on-health-degraded.meogle: "인프라"
+    notifications.argoproj.io/subscribe.on-sync-failed.meogle: "인프라"
+    notifications.argoproj.io/subscribe.on-health-suspended.meogle: "인프라"
+    notifications.argoproj.io/subscribe.on-health-missing.meogle: "인프라"
 spec:
   project: meogle-prod
   source:
