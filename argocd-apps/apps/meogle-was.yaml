@@ -4,7 +4,7 @@ metadata:
   name: meogle-was
   namespace: argocd
 spec:
-  project: default
+  project: meogle-prod
   source:
     repoURL: https://github.com/meogle-share/blog-infra
     targetRevision: main
