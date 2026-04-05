@@ -20,6 +20,10 @@ db:
   name: meogle
   username: meogle
   password: "" # Required: --set db.password=xxx
+# Redis connection settings
+redis:
+  host: redis # Redis service name from infra/redis chart
+  port: "6379"
 # JWT Secret
 jwt:
   secret: "" # Required: --set jwt.secret=xxx

@@ -41,6 +41,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "meogle-was.fullname" . }}-secret
                   key: DB_PASSWORD
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

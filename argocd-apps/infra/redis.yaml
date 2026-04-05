@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: meogle-redis
+  namespace: argocd
+spec:
+  project: meogle-prod
+  source:
+    repoURL: https://github.com/meogle-share/blog-infra
+    targetRevision: main
+    path: infra/redis
+    helm:
+      releaseName: redis
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: meogle
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
